@@ -1,0 +1,56 @@
+@Reseller.API_HostAddress = https://localhost:7278
+
+POST {{Reseller.API_HostAddress}}/revenda/Create
+Content-Type: application/json
+
+{
+  "Cnpj": "30381289000105",
+  "RazaoSocial": "Teste Razão Social",
+  "NomeFantasia": "Teste Nome Fantasia",
+  "Email": "teste@email.com",
+  "Telefones": [
+    "51971156789"
+  ],
+  "Contatos":[
+    {
+      "Principal": true,
+      "Nome": "João"
+    }
+  ],
+  "Enderecos": [
+  {
+    "Logradouro": "Rua das Palmeiras",
+    "Numero": "123",
+    "Complemento": "Apto 202",
+    "Cidade": "São Paulo",
+    "Estado": "SP",
+    "Cep": "04567890"
+  },
+  {
+    "Logradouro": "Avenida Brasil",
+    "Numero": "4567",
+    "Complemento": "Bloco B, Sala 12",
+    "Cidade": "Rio de Janeiro",
+    "Estado": "RJ",
+    "Cep": "22071060"
+  },
+  {
+    "Logradouro": "Rua do Comércio",
+    "Numero": "89",
+    "Complemento": "Fundos",
+    "Cidade": "Belo Horizonte",
+    "Estado": "MG",
+    "Cep": "30190130"
+  }
+]
+}
+### Novo
+
+@cnpjExiste=30381289000105
+GET {{Reseller.API_HostAddress}}/revenda?cnpj={{cnpjExiste}}
+### Existe
+
+
+@cnpjNaoExiste=05131925000195
+GET {{Reseller.API_HostAddress}}/revenda?cnpj={{cnpjNaoExiste}}
+### Não existe
