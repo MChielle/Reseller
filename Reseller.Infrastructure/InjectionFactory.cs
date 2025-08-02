@@ -10,7 +10,7 @@ using Reseller.Service.Services;
 
 namespace Reseller.Infrastructure
 {
-    public class InjectionFactory : IDesignTimeDbContextFactory<ResellerContext>
+    public sealed class InjectionFactory : IDesignTimeDbContextFactory<ResellerContext>
     {
         public static void ConfigureContext(IServiceCollection services, IConfiguration configuration)
         {

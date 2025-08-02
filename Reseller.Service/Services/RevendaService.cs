@@ -8,7 +8,7 @@ using Reseller.Domain.Models.RevendaModels.Input;
 
 namespace Reseller.Service.Services
 {
-    public class RevendaService : IRevendaService
+    public sealed class RevendaService : IRevendaService
     {
         private readonly IRevendaRepository _revendaRepository;
 

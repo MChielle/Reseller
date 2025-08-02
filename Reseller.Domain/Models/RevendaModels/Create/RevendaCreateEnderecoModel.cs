@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Reseller.Domain.Models.RevendaModels.Create
 {
-    public class RevendaCreateEnderecoModel
+    public sealed class RevendaCreateEnderecoModel
     {
         [MaxLength(LogradouroEnderecoValueObject.MaxLength, ErrorMessage = "Excedido o limite de caracteres da propriedade Logradouro.")]
         [Required(ErrorMessage = "Logradouro é obrigatório.")]

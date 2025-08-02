@@ -25,7 +25,7 @@ namespace Reseller.Domain.Entities
         public bool Principal { get; set; }
     }
 
-    public class NomeContatoValueObject
+    public sealed class NomeContatoValueObject
     {
         public const int MaxLength = 100;
 

@@ -5,7 +5,7 @@ using Reseller.Domain.Entities;
 
 namespace Reseller.Infrastructure
 {
-    public partial class ResellerContext : DbContext
+    public sealed partial class ResellerContext : DbContext
     {
         public DbSet<Revenda> Revendas { get; set; }
         public DbSet<Telefone> Telefones { get; set; }

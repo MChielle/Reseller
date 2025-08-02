@@ -1,6 +1,6 @@
 ﻿namespace Reseller.Domain.Data.ValueObjects
 {
-    public class CepValueObject
+    public sealed class CepValueObject
     {
         public const int Length = 8;
         public string Value { get; }

@@ -1,6 +1,6 @@
 ﻿namespace Reseller.Domain.Data.ValueObjects
 {
-    public class TelefoneValueObject
+    public sealed class TelefoneValueObject
     {
         public const int MaxLength = 11;
 

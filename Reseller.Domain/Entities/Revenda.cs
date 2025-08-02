@@ -40,7 +40,7 @@ namespace Reseller.Domain.Entities
         public ICollection<Endereco> Enderecos { get; private set; }
     }
 
-    public class RazaoSocialRevendaValueObject
+    public sealed class RazaoSocialRevendaValueObject
     {
         public const int MaxLength = 100;
         public string Value { get; }
@@ -57,7 +57,7 @@ namespace Reseller.Domain.Entities
         }
     }
 
-    public class NomeFantasiaRevendaValueObject
+    public sealed class NomeFantasiaRevendaValueObject
     {
         public const int MaxLength = 100;
         public string Value { get; }

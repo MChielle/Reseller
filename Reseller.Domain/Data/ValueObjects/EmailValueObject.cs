@@ -2,7 +2,7 @@
 
 namespace Reseller.Domain.Data.ValueObjects
 {
-    public class EmailValueObject
+    public sealed class EmailValueObject
     {
         public const int MaxLength = 100;
         public string Value { get; }

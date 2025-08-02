@@ -2,7 +2,7 @@
 
 namespace Reseller.Domain.Entities.Base
 {
-    public class Entity
+    public abstract class Entity
     {
         [Key]
         public Guid Id { get; set; }

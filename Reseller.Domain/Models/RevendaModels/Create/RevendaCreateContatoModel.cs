@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Reseller.Domain.Models.RevendaModels.Create
 {
-    public class RevendaCreateContatoModel
+    public sealed class RevendaCreateContatoModel
     {
         [Required(ErrorMessage = "Principal é obrigatório")]
         public bool Principal { get; set; }

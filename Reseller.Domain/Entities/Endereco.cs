@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Reseller.Domain.Entities
 {
-    public class Endereco : Entity
+    public sealed class Endereco : Entity
     {
         internal Endereco()
         { }
@@ -47,7 +47,7 @@ namespace Reseller.Domain.Entities
         public string Cep { get; set; }
     }
 
-    public class LogradouroEnderecoValueObject
+    public sealed class LogradouroEnderecoValueObject
     {
         public const int MaxLength = 100;
         public string Value { get; }
@@ -64,7 +64,7 @@ namespace Reseller.Domain.Entities
         }
     }
 
-    public class NumeroEnderecoValueObject
+    public sealed class NumeroEnderecoValueObject
     {
         public const int MaxLength = 10;
         public string Value { get; }
@@ -81,7 +81,7 @@ namespace Reseller.Domain.Entities
         }
     }
 
-    public class ComplementoEnderecoValueObject
+    public sealed class ComplementoEnderecoValueObject
     {
         public const int MaxLength = 50;
         public string? Value { get; }
@@ -95,7 +95,7 @@ namespace Reseller.Domain.Entities
         }
     }
 
-    public class CidadeEnderecoValueObject
+    public sealed class CidadeEnderecoValueObject
     {
         public const int MaxLength = 100;
         public string Value { get; }
@@ -112,7 +112,7 @@ namespace Reseller.Domain.Entities
         }
     }
 
-    public class EstadoEnderecoValueObject
+    public sealed class EstadoEnderecoValueObject
     {
         public const int MaxLength = 30;
         public string Value { get; }

@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Reseller.Domain.Models.RevendaModels.Input
 {
-    public class RevendaCreateModelRequest : IValidatableObject
+    public sealed class RevendaCreateModelRequest : IValidatableObject
     {
         [Required(ErrorMessage = "CNPJ é obrigatório.")]
         [MaxLength(CnpjValueObject.Length, ErrorMessage = "CNPJ deve ter 14 caracteres")]
