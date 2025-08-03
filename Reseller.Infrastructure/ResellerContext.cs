@@ -1,6 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Reseller.Domain.Data;
-using Reseller.Domain.Data.ValueObjects;
 using Reseller.Domain.Entities;
 
 namespace Reseller.Infrastructure

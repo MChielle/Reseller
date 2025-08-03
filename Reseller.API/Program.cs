@@ -1,21 +1,37 @@
+using MassTransit;
+using Reseller.API.Extensions;
 using Reseller.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 
 builder.Services.AddControllers();
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
-InjectionFactory.ConfigureContext(builder.Services, builder.Configuration);
+builder.Services.AddMassTransit(busConfigurator =>
+{
+    busConfigurator.SetKebabCaseEndpointNameFormatter();
+
+    busConfigurator.UsingRabbitMq((context, configurator) =>
+    {
+        configurator.Host(builder.Configuration["MessageBroker:Host"], h =>
+        {
+            h.Username(builder.Configuration["MessageBroker:Username"]);
+            h.Password(builder.Configuration["MessageBroker:Password"]);
+        });
+
+        configurator.ConfigureEndpoints(context);
+    });
+});
+
+InjectionFactory.ConfigureContext(builder.Services, builder.Configuration, Environment.GetEnvironmentVariable("DEFAULT_CONNECTION_STRING"));
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    app.ApplyMigrations();
 }
 
 app.UseHttpsRedirection();

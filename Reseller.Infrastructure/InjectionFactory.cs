@@ -4,7 +4,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Reseller.Domain.Interfaces.Repositories;
 using Reseller.Domain.Interfaces.Services;
-using Reseller.Infrastructure;
 using Reseller.Infrastructure.Repositories;
 using Reseller.Service.Services;
 
@@ -12,12 +11,11 @@ namespace Reseller.Infrastructure
 {
     public sealed class InjectionFactory : IDesignTimeDbContextFactory<ResellerContext>
     {
-        public static void ConfigureContext(IServiceCollection services, IConfiguration configuration)
+        public static void ConfigureContext(IServiceCollection services, IConfiguration configuration, string defaultConnectionString)
         {
             services.AddDbContext<ResellerContext>(options =>
             {
-                options.UseSqlite("Data Source=database.dat");
-                //options.UseSqlite(configuration.GetConnectionString("DefaultConnection"));
+                options.UseSqlite(defaultConnectionString);
             });
 
             ConfigureServices(services);

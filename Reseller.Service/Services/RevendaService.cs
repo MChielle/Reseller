@@ -19,9 +19,9 @@ namespace Reseller.Service.Services
 
         public async Task<bool> CreateRevendaAsync(RevendaCreateModelRequest request)
         {
-            var existeRevenda = await _revendaRepository.GetByCnpjAsync(new CnpjValueObject(request.Cnpj));
+            var existeRevenda = await _revendaRepository.ExistsByCnpjAsync(new CnpjValueObject(request.Cnpj));
 
-            if (existeRevenda != null) throw new Exception("Revenda já possui cadastro.");
+            if (existeRevenda) throw new Exception("Revenda já possui cadastro.");
 
             var telefones = request.Telefones.Select(telefone =>
                     new Telefone(new TelefoneValueObject(telefone))).ToArray();
