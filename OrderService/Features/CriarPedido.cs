@@ -70,9 +70,9 @@ namespace OrderService.Features
             private readonly ApplicationDbContext _dbContext;
             private readonly IValidator<Command> _validator;
             private readonly IPublishEndpoint _publishEndpoint;
-            private IRevendaClient _revendaClient;
+            private RevendaClient _revendaClient;
 
-            public Handler(ApplicationDbContext dbContext, IValidator<Command> validator, IPublishEndpoint publishEndpoint, IRevendaClient revendaClient)
+            public Handler(ApplicationDbContext dbContext, IValidator<Command> validator, IPublishEndpoint publishEndpoint, RevendaClient revendaClient)
             {
                 _dbContext = dbContext;
                 _validator = validator;

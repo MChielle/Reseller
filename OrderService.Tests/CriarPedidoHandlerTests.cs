@@ -28,7 +28,7 @@ namespace OrderService.Tests.Features
                 .Returns(new FluentValidation.Results.ValidationResult(new[] { new FluentValidation.Results.ValidationFailure("Cliente.Nome", "Nome obrigatório") }));
             var dbContext = new Mock<ApplicationDbContext>();
             var publishEndpoint = new Mock<IPublishEndpoint>();
-            var revendaClient = new Mock<RevendaClient>(null as HttpClient);
+            var revendaClient = new Mock<RevendaClient>();
 
             var handler = new CriarPedido.Handler(dbContext.Object, validator.Object, publishEndpoint.Object, revendaClient.Object);
             var command = new CriarPedido.Command
@@ -52,7 +52,7 @@ namespace OrderService.Tests.Features
                 .Returns(new FluentValidation.Results.ValidationResult());
             var dbContext = new Mock<ApplicationDbContext>();
             var publishEndpoint = new Mock<IPublishEndpoint>();
-            var revendaClient = new Mock<IRevendaClient>();
+            var revendaClient = new Mock<RevendaClient>();
 
             var handler = new CriarPedido.Handler(dbContext.Object, validator.Object, publishEndpoint.Object, revendaClient.Object);
             var command = new CriarPedido.Command
