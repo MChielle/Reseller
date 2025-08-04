@@ -25,7 +25,7 @@ namespace Reseller.Infrastructure
         public ResellerContext CreateDbContext(string[] args)
         {
             var optionsBuilder = new DbContextOptionsBuilder<ResellerContext>();
-            optionsBuilder.UseSqlite("Data Source=database.dat");
+            optionsBuilder.UseSqlite("Data Source=resellerApi.dat");
             return new ResellerContext(optionsBuilder.Options);
         }
 

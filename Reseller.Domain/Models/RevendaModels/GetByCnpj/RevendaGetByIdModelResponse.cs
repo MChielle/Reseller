@@ -1,8 +1,8 @@
 ﻿namespace Reseller.Domain.Models.RevendaModels.GetByCnpj
 {
-    public sealed class RevendaGetByCnpjModelResponse
+    public sealed class RevendaGetByIdModelResponse
     {
-        public RevendaGetByCnpjModelResponse(string cnpj, string razaoSocial, string nomeFantasia, string email)
+        public RevendaGetByIdModelResponse(string cnpj, string razaoSocial, string nomeFantasia, string email)
         {
             Cnpj = cnpj;
             RazaoSocial = razaoSocial;

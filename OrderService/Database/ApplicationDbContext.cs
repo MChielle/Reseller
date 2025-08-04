@@ -9,6 +9,12 @@ namespace OrderService.Database
 
         public DbSet<Pedido> Pedidos { get; set; }
 
+        public DbSet<Cliente> Clientes { get; set; }
+
+        public ApplicationDbContext()
+        {            
+        }
+
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {
         }

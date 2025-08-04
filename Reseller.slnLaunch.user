@@ -1,0 +1,17 @@
+[
+  {
+    "Name": "Build Services",
+    "Projects": [
+      {
+        "Path": "Reseller.API\\Reseller.API.csproj",
+        "Action": "Start",
+        "DebugTarget": "https"
+      },
+      {
+        "Path": "OrderService\\OrderService.csproj",
+        "Action": "Start",
+        "DebugTarget": "https"
+      }
+    ]
+  }
+]

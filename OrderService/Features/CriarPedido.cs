@@ -2,11 +2,13 @@
 using FluentValidation;
 using MassTransit;
 using MediatR;
-using OrderService.Contracts;
+using OrderService.Contracts.CriarPedido;
+using OrderService.Contracts.EnviarPedidos;
 using OrderService.Database;
 using OrderService.Entities;
 using OrderService.Enums;
 using OrderService.Features;
+using OrderService.HttpClients.Revenda;
 using Shared;
 
 namespace OrderService.Features
@@ -15,11 +17,17 @@ namespace OrderService.Features
     {
         public class Command : IRequest<Result<PedidoResponse>>
         {
-            public string NomeCliente { get; set; }
-            public string TelefoneCliente { get; set; }
-            public string Cnpj { get; set; }
-            public string Cpf { get; set; }
+            public Guid RevendaId { get; set; }
+            public CriarPedidoClienteModel Cliente { get; set; }
             public List<CriarPedidoItemModel> Itens { get; set; }
+        }
+
+        public sealed class CriarPedidoClienteModel
+        {
+            public string Cpf { get; set; }
+            public string Cnpj { get; set; }
+            public string Nome { get; set; }
+            public string Telefone { get; set; }
         }
 
         public sealed class CriarPedidoItemModel
@@ -33,13 +41,20 @@ namespace OrderService.Features
         {
             public Validator()
             {
-                RuleFor(x => x.NomeCliente)
+                RuleFor(x => x.RevendaId)
+                    .NotEmpty().WithMessage("O ID da revenda é obrigatório.");
+
+                RuleFor(x => x.Cliente.Nome)
                     .NotEmpty().WithMessage("O nome do cliente é obrigatório.")
                     .MaximumLength(100).WithMessage("O nome do cliente deve ter no máximo 100 caracteres.");
 
-                RuleFor(x => x.TelefoneCliente)
+                RuleFor(x => x.Cliente.Telefone)
                     .NotEmpty().WithMessage("O telefone do cliente é obrigatório.")
                     .Matches(@"^\+?[1-9]\d{1,14}$").WithMessage("O telefone do cliente deve ser um número válido.");
+
+                RuleFor(x => new { x.Cliente.Cpf, x.Cliente.Cnpj })
+                    .Must(x => !(!Validations.IsValidCpf(x.Cpf) && !Validations.IsValidCnpj(x.Cnpj)))
+                    .WithMessage("É necessário informar um CPF ou um CNPJ válido.");
 
                 RuleFor(x => x.Itens)
                     .NotEmpty().WithMessage("O pedido deve conter pelo menos um item.")
@@ -47,24 +62,22 @@ namespace OrderService.Features
                     .WithMessage("Todos os itens devem ter quantidade maior que zero.")
                     .Must(itens => !itens.Any(Item => string.IsNullOrEmpty(Item.Nome)))
                     .WithMessage("Todos os itens devem conter o nome");
-
-                RuleFor(x => new { x.Cpf, x.Cnpj })
-                    .Must(x => !(!Validations.IsValidCpf(x.Cpf) && !Validations.IsValidCnpj(x.Cnpj)))
-                    .WithMessage("É necessário informar um CPF ou um CNPJ válido.");
             }
         }
 
-        internal sealed class Handler : IRequestHandler<Command, Result<PedidoResponse>>
+        public sealed class Handler : IRequestHandler<Command, Result<PedidoResponse>>
         {
             private readonly ApplicationDbContext _dbContext;
             private readonly IValidator<Command> _validator;
             private readonly IPublishEndpoint _publishEndpoint;
+            private IRevendaClient _revendaClient;
 
-            public Handler(ApplicationDbContext dbContext, IValidator<Command> validator, IPublishEndpoint publishEndpoint)
+            public Handler(ApplicationDbContext dbContext, IValidator<Command> validator, IPublishEndpoint publishEndpoint, IRevendaClient revendaClient)
             {
                 _dbContext = dbContext;
                 _validator = validator;
                 _publishEndpoint = publishEndpoint;
+                _revendaClient = revendaClient;
             }
 
             public async Task<Result<PedidoResponse>> Handle(Command request, CancellationToken cancellationToken)
@@ -75,6 +88,13 @@ namespace OrderService.Features
                     return Result.Failure<PedidoResponse>(new Error("CriarPedido.Validation", validationResult.ToString()));
                 }
 
+                var revenda = await _revendaClient.GetRevendaByIdAsync(request.RevendaId);
+
+                if (revenda == null)
+                {
+                    return Result.Failure<PedidoResponse>(new Error("CriarPedido.Revenda", "Revenda não encontrada."));
+                }
+
                 var itens = request.Itens.Select(item => new Item
                 {
                     Referencia = item.Referencia,
@@ -82,11 +102,19 @@ namespace OrderService.Features
                     Quantidade = item.Quantidade
                 }).ToArray();
 
+                var cliente = new Cliente
+                {
+                    Cnpj = request.Cliente.Cnpj,
+                    Cpf = request.Cliente.Cpf,
+                    Nome = request.Cliente.Nome,
+                    Telefone = request.Cliente.Telefone
+                };
+
                 var pedido = new Pedido()
                 {
                     Id = Guid.NewGuid(),
-                    NomeCliente = request.NomeCliente,
-                    TelefoneCliente = request.TelefoneCliente,
+                    RevendaId = request.RevendaId,
+                    Cliente = cliente,
                     DataPedidoUTC = DateTime.UtcNow,
                     Status = StatusPedido.Criado,
                     Itens = itens
@@ -121,10 +149,14 @@ public class CriarPedidoEndpoint : ICarterModule
         {
             var command = new CriarPedido.Command()
             {
-                Cnpj = request.Cnpj,
-                Cpf = request.Cpf,
-                NomeCliente = request.NomeCliente,
-                TelefoneCliente = request.TelefoneCliente,
+                RevendaId = request.RevendaId,
+                Cliente = new CriarPedido.CriarPedidoClienteModel
+                {
+                    Cnpj = request.Cliente.Cnpj,
+                    Cpf = request.Cliente.Cpf,
+                    Nome = request.Cliente.Nome,
+                    Telefone = request.Cliente.Telefone,
+                },
                 Itens = request.Itens.Select(item => new CriarPedido.CriarPedidoItemModel
                 {
                     Referencia = item.Referencia,

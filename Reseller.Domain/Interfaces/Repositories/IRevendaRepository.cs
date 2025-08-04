@@ -6,7 +6,7 @@ namespace Reseller.Domain.Interfaces.Repositories
     public interface IRevendaRepository
     {
         Task<bool> CreateAsync(Revenda revenda);
-        Task<Revenda?> GetByCnpjAsync(CnpjValueObject cnpj);
+        Task<Revenda?> GetByIdAsync(Guid Id);
         Task<bool> ExistsByCnpjAsync(CnpjValueObject cnpj);
     }
 }

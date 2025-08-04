@@ -50,20 +50,17 @@ namespace Reseller.Service.Services
             return await _revendaRepository.CreateAsync(revenda);
         }
 
-        public async Task<RevendaGetByCnpjModelResponse> GetRevendaByCnpjAsync(RevendaGetByCnpjModelRequest request)
+        public async Task<RevendaGetByIdModelResponse> GetRevendaByIdAsync(RevendaGetByIdModelRequest request)
         {
-            var revenda = await _revendaRepository.GetByCnpjAsync(new CnpjValueObject(request.Cnpj));
+            var revenda = await _revendaRepository.GetByIdAsync(request.Id);
 
-            if (revenda == null)
-                throw new Exception("Revenda não encontrada.");
+            if (revenda == null) return null;
 
-            var response = new RevendaGetByCnpjModelResponse(
+            return new RevendaGetByIdModelResponse(
                 revenda.Cnpj,
                 revenda.RazaoSocial,
                 revenda.NomeFantasia,
                 revenda.Email);
-
-            return response;
         }
     }
 }

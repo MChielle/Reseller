@@ -7,6 +7,6 @@ namespace Reseller.Domain.Interfaces.Services
     public interface IRevendaService
     {
         Task<bool> CreateRevendaAsync(RevendaCreateModelRequest request);
-        Task<RevendaGetByCnpjModelResponse> GetRevendaByCnpjAsync(RevendaGetByCnpjModelRequest request);
+        Task<RevendaGetByIdModelResponse> GetRevendaByIdAsync(RevendaGetByIdModelRequest request);
     }
 }

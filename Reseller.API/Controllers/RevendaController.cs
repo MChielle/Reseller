@@ -37,14 +37,15 @@ namespace Reseller.API.Controllers
         }
 
         [HttpGet()]
-        public async Task<IActionResult> GetRevendaByCnpjAsync([FromQuery] RevendaGetByCnpjModelRequest request)
+        public async Task<IActionResult> GetRevendaByIdAsync([FromQuery] RevendaGetByIdModelRequest request)
         {
             try
             {
                 if (!ModelState.IsValid)
                     return new BadRequestObjectResult(ModelState);
 
-                var revenda = await _service.GetRevendaByCnpjAsync(request);
+                var revenda = await _service.GetRevendaByIdAsync(request);
+                if (revenda == null) return new NoContentResult();
                 return new OkObjectResult(revenda);
             }
             catch (Exception ex)

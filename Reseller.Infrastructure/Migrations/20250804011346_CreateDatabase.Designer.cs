@@ -11,7 +11,7 @@ using Reseller.Infrastructure;
 namespace Reseller.Infrastructure.Migrations
 {
     [DbContext(typeof(ResellerContext))]
-    [Migration("20250802200914_CreateDatabase")]
+    [Migration("20250804011346_CreateDatabase")]
     partial class CreateDatabase
     {
         /// <inheritdoc />

@@ -69,15 +69,15 @@ namespace Reseller.Test.Controllers
             // Arrange
             var mockLogger = new Mock<ILogger<RevendaController>>();
             var mockService = new Mock<IRevendaService>();
-            var response = new RevendaGetByCnpjModelResponse("12345678000195", "Empresa Teste", "Fantasia Teste", "teste@empresa.com");
-            mockService.Setup(s => s.GetRevendaByCnpjAsync(It.IsAny<RevendaGetByCnpjModelRequest>()))
+            var response = new RevendaGetByIdModelResponse("12345678000195", "Empresa Teste", "Fantasia Teste", "teste@empresa.com");
+            mockService.Setup(s => s.GetRevendaByIdAsync(It.IsAny<RevendaGetByIdModelRequest>()))
                 .ReturnsAsync(response);
 
             var controller = new RevendaController(mockLogger.Object, mockService.Object);
-            var request = new RevendaGetByCnpjModelRequest { Cnpj = "12345678000195" };
+            var request = new RevendaGetByIdModelRequest { Id = Guid.NewGuid() };
 
             // Act
-            var result = await controller.GetRevendaByCnpjAsync(request);
+            var result = await controller.GetRevendaByIdAsync(request);
 
             // Assert
             var okResult = result as OkObjectResult;
@@ -91,14 +91,14 @@ namespace Reseller.Test.Controllers
             // Arrange
             var mockLogger = new Mock<ILogger<RevendaController>>();
             var mockService = new Mock<IRevendaService>();
-            mockService.Setup(s => s.GetRevendaByCnpjAsync(It.IsAny<RevendaGetByCnpjModelRequest>()))
+            mockService.Setup(s => s.GetRevendaByIdAsync(It.IsAny<RevendaGetByIdModelRequest>()))
                 .ThrowsAsync(new System.Exception("Revenda não encontrada."));
 
             var controller = new RevendaController(mockLogger.Object, mockService.Object);
-            var request = new RevendaGetByCnpjModelRequest { Cnpj = "12345678000195" };
+            var request = new RevendaGetByIdModelRequest { Id = Guid.NewGuid() };
 
             // Act
-            var result = await controller.GetRevendaByCnpjAsync(request);
+            var result = await controller.GetRevendaByIdAsync(request);
 
             // Assert
             var badRequest = result as BadRequestObjectResult;

@@ -1,4 +1,4 @@
-﻿namespace OrderService.Contracts
+﻿namespace OrderService.Contracts.CriarPedido
 {
     public class PedidoResponse
     {

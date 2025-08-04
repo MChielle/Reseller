@@ -4,10 +4,12 @@ using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using OrderService.Database;
 using OrderService.Extensions;
+using OrderService.HttpClients.PedidosClient;
+using OrderService.HttpClients.Policies;
+using OrderService.HttpClients.Revenda;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddOpenApi();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -37,6 +39,17 @@ builder.Services.AddMassTransit(busConfigurator =>
         configurator.ConfigureEndpoints(context);
     });
 });
+
+
+builder.Services.AddHttpClient<PedidosClient>(client =>
+{
+    client.BaseAddress = new Uri("https://api.companyx.com/");
+}).AddPolicyHandler(HttpPolicy.GetRetryPolicy());
+
+builder.Services.AddHttpClient<RevendaClient>(client =>
+{
+    client.BaseAddress = new Uri("https://localhost:7278");
+}).AddPolicyHandler(HttpPolicy.GetRetryPolicy());
 
 var app = builder.Build();
 

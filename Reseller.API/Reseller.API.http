@@ -1,8 +1,8 @@
 @Reseller.API_HostAddress = https://localhost:7278
 
+### CNPJ é único
 POST {{Reseller.API_HostAddress}}/revenda/Create
 Content-Type: application/json
-
 {
   "Cnpj": "30381289000105",
   "RazaoSocial": "Teste Razão Social",
@@ -46,11 +46,11 @@ Content-Type: application/json
 }
 ### Novo
 
-@cnpjExiste=30381289000105
-GET {{Reseller.API_HostAddress}}/revenda?cnpj={{cnpjExiste}}
+@Id=9A56EA56-33AD-477D-A9A9-A1503D4CBA28
+GET {{Reseller.API_HostAddress}}/revenda?id={{Id}}
 ### Existe
 
 
-@cnpjNaoExiste=05131925000195
-GET {{Reseller.API_HostAddress}}/revenda?cnpj={{cnpjNaoExiste}}
+@IdNaoExiste=5E6DC996-3C9E-4ABB-BC71-796AFDE9F221
+GET {{Reseller.API_HostAddress}}/revenda?id={{IdNaoExiste}}
 ### Não existe

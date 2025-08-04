@@ -18,7 +18,7 @@ namespace Reseller.Test.Services
         {
             // Arrange
             var mockRepo = new Mock<IRevendaRepository>();
-            mockRepo.Setup(r => r.GetByCnpjAsync(It.IsAny<CnpjValueObject>()))
+            mockRepo.Setup(r => r.GetByIdAsync(It.IsAny<Guid>()))
                 .ReturnsAsync((Revenda)null);
             mockRepo.Setup(r => r.CreateAsync(It.IsAny<Revenda>()))
                 .ReturnsAsync(true);
@@ -59,15 +59,15 @@ namespace Reseller.Test.Services
             );
 
             var mockRepo = new Mock<IRevendaRepository>();
-            mockRepo.Setup(r => r.GetByCnpjAsync(It.IsAny<CnpjValueObject>()))
+            mockRepo.Setup(r => r.GetByIdAsync(It.IsAny<Guid>()))
                 .ReturnsAsync(revendaEntity);
 
             var service = new RevendaService(mockRepo.Object);
 
-            var request = new RevendaGetByCnpjModelRequest { Cnpj = cnpj };
+            var request = new RevendaGetByIdModelRequest { Id = Guid.NewGuid()};
 
             // Act
-            var result = await service.GetRevendaByCnpjAsync(request);
+            var result = await service.GetRevendaByIdAsync(request);
 
             // Assert
             result.Should().NotBeNull();
@@ -78,24 +78,23 @@ namespace Reseller.Test.Services
         }
 
         [Fact]
-        public async Task GetRevendaByCnpjAsync_ShouldThrowException_WhenRevendaDoesNotExist()
+        public async Task GetRevendaByIdAsync_ShouldReturnNoContent_WhenRevendaDoesNotExist()
         {
             // Arrange
             var cnpj = "12345678000195";
             var mockRepo = new Mock<IRevendaRepository>();
-            mockRepo.Setup(r => r.GetByCnpjAsync(It.IsAny<CnpjValueObject>()))
+            mockRepo.Setup(r => r.GetByIdAsync(It.IsAny<Guid>()))
                 .ReturnsAsync((Revenda)null);
 
             var service = new RevendaService(mockRepo.Object);
 
-            var request = new RevendaGetByCnpjModelRequest { Cnpj = cnpj };
+            var request = new RevendaGetByIdModelRequest { Id = Guid.NewGuid() };
 
             // Act
-            var act = async () => await service.GetRevendaByCnpjAsync(request);
+            var result = await service.GetRevendaByIdAsync(request);
 
             // Assert
-            await act.Should().ThrowAsync<Exception>()
-                .WithMessage("Revenda não encontrada.");
+            result.Should().Be(null);
         }
     }
 }

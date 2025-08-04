@@ -28,11 +28,11 @@ namespace Reseller.Infrastructure.Repositories
                 .AnyAsync(r => r.Cnpj.Equals(cnpj.Value));
         }
 
-        public async Task<Revenda?> GetByCnpjAsync(CnpjValueObject cnpj)
+        public async Task<Revenda?> GetByIdAsync(Guid Id)
         {
             return await _context.Revendas
                 .AsNoTracking()
-                .FirstOrDefaultAsync(r => r.Cnpj.Equals(cnpj.Value));
+                .FirstOrDefaultAsync(r => r.Id.Equals(Id));
         }
     }
 }
