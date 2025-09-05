@@ -1,4 +1,5 @@
 ﻿using OrderService.HttpClients.RevendaClient.Models;
+using Shared;
 using System.Net;
 using System.Text.Json;
 using System.Web;
@@ -20,11 +21,11 @@ namespace OrderService.HttpClients.Revenda
             };
         }
 
-        public async Task<GetRevendaByIdResponseModel> GetRevendaByIdAsync(Guid Id)
+        public async Task<Result<GetRevendaByIdResponseModel>> GetRevendaByIdAsync(Guid Id)
         {
             if (Id == default)
             {
-                throw new ArgumentNullException("Id Revenda é parâmetro obrigatório", nameof(Id));
+                return Result.Failure<GetRevendaByIdResponseModel>(new Error("GetRevendaByIdAsync", "Id Revenda é parâmetro obrigatório"));
             }
 
             var url = "/revenda";

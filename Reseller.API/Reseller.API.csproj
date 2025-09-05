@@ -22,6 +22,7 @@
     <ProjectReference Include="..\Reseller.Domain\Reseller.Domain.csproj" />
     <ProjectReference Include="..\Reseller.Infrastructure\Reseller.Infrastructure.csproj" />
     <ProjectReference Include="..\Reseller.Service\Reseller.Service.csproj" />
+    <ProjectReference Include="..\Shared\Shared.csproj" />
   </ItemGroup>
 
 </Project>

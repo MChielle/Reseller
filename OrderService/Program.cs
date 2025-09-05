@@ -2,6 +2,7 @@ using Carter;
 using FluentValidation;
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
+using OrderService.Contracts.ConsultarRevenda;
 using OrderService.Database;
 using OrderService.Extensions;
 using OrderService.HttpClients.PedidosClient;
@@ -28,6 +29,8 @@ builder.Services.AddMassTransit(busConfigurator =>
 {
     busConfigurator.SetKebabCaseEndpointNameFormatter();
 
+    busConfigurator.AddRequestClient<IConsultarRevendaRequest>();
+
     busConfigurator.UsingRabbitMq((context, configurator) =>
     {
         configurator.Host(builder.Configuration["MessageBroker:Host"], h =>
@@ -36,7 +39,8 @@ builder.Services.AddMassTransit(busConfigurator =>
             h.Password(builder.Configuration["MessageBroker:Password"]);
         });
 
-        configurator.ConfigureEndpoints(context);
+
+        //configurator.ConfigureEndpoints(context);
     });
 });
 

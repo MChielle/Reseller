@@ -32,6 +32,8 @@ namespace OrderService.Tests.Features
             var dbContext = new Mock<ApplicationDbContext>();
             var publishEndpoint = new Mock<IPublishEndpoint>();
             var revendaClient = new Mock<RevendaClient>();
+            revendaClient.Setup(c => c.GetRevendaByIdAsync(It.IsAny<Guid>()))
+                .ReturnsAsync((GetRevendaByIdResponseModel)null); 
             var pedidosClient = new Mock<PedidosClient>();
 
             var handler = new EnviarPedidos.Handler(dbContext.Object, validator.Object, publishEndpoint.Object, revendaClient.Object, pedidosClient.Object);

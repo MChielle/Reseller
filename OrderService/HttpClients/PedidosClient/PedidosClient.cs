@@ -27,7 +27,7 @@ namespace OrderService.HttpClients.PedidosClient
             if (sucesso.Next(0, 100) >= 90)
             {
                 Task.Delay(3000).Wait();
-                return Result.Failure<Guid>(new Error("EnviarPedidos.EnviarPedidosAsync", "Falha no envio dos pedidos."));
+                return Result.Failure<Guid>(new Error("EnviarPedidos.Failure", "Falha no envio dos pedidos."));
             }
             Task.Delay(1000).Wait();
             return Guid.NewGuid();

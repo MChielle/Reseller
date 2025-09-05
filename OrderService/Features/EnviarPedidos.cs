@@ -3,6 +3,7 @@ using FluentValidation;
 using MassTransit;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using OrderService.Contracts.ConsultarRevenda;
 using OrderService.Contracts.EnviarPedidos;
 using OrderService.Database;
 using OrderService.Enums;
@@ -36,16 +37,18 @@ namespace OrderService.Features
             private readonly ApplicationDbContext _dbContext;
             private readonly IValidator<Command> _validator;
             private readonly IPublishEndpoint _publishEndpoint;
+            private readonly IRequestClient<IConsultarRevendaRequest> _requestClient;
             private RevendaClient _revendaClient;
             private PedidosClient _pedidosClient;
 
-            public Handler(ApplicationDbContext dbContext, IValidator<Command> validator, IPublishEndpoint publishEndpoint, RevendaClient revendaClient, PedidosClient pedidosClient)
+            public Handler(ApplicationDbContext dbContext, IValidator<Command> validator, IPublishEndpoint publishEndpoint, RevendaClient revendaClient, PedidosClient pedidosClient, IRequestClient<IConsultarRevendaRequest> requestClient)
             {
                 _dbContext = dbContext;
                 _validator = validator;
                 _publishEndpoint = publishEndpoint;
                 _revendaClient = revendaClient;
                 _pedidosClient = pedidosClient;
+                _requestClient = requestClient;
             }
 
             public async Task<Result<EnviarPedidosResponse>> Handle(Command request, CancellationToken cancellationToken)
@@ -56,9 +59,12 @@ namespace OrderService.Features
                     return Result.Failure<EnviarPedidosResponse>(new Error("EnviarPedidos.Validation", validationResult.ToString()));
                 }
 
-                var revenda = await _revendaClient.GetRevendaByIdAsync(request.RevendaId);
+                //Executa consulta na API revenda para garantir que a mesma existe usando HTTP request/response.
+               // var revenda = await _revendaClient.GetRevendaByIdAsync(request.RevendaId);
 
-                if (revenda == null)
+                var revenda = await _requestClient.GetResponse<IConsultarRevendaResponse>(new { request.RevendaId });
+
+                if (!revenda.Message.Existe)
                 {
                     return Result.Failure<EnviarPedidosResponse>(new Error("EnviarPedidos.Revenda", "Revenda não encontrada."));
                 }
@@ -78,7 +84,7 @@ namespace OrderService.Features
                     .Where(x => x.RevendaId.Equals(request.RevendaId) && x.Status.Equals(StatusPedido.Criado))
                     .ToListAsync(cancellationToken);
 
-                var enviadoComSucesso = await _pedidosClient.EnviarPedidosAsync(new EnviarPedidosRequestModel
+                var pedidoEnviado = await _pedidosClient.EnviarPedidosAsync(new EnviarPedidosRequestModel
                 {
                     RevendaId = request.RevendaId,
                     Pedidos = pedidos.Select(p => new EnviarPedidosPedidoModel
@@ -94,7 +100,7 @@ namespace OrderService.Features
                     }).ToList()
                 });
 
-                if(!enviadoComSucesso.IsSuccess)
+                if(!pedidoEnviado.IsSuccess)
                 {
                     return Result.Failure<EnviarPedidosResponse>(new Error("EnviarPedidos.Pedidos", "Falha ao enviar pedidos."));
                 }
@@ -105,7 +111,7 @@ namespace OrderService.Features
 
                 return new EnviarPedidosResponse
                 {
-                    CodigoPedido = enviadoComSucesso.Value
+                    CodigoPedido = pedidoEnviado.Value
                 };
             }
         }

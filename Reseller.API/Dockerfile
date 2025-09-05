@@ -4,8 +4,7 @@
 FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS base
 USER $APP_UID
 WORKDIR /app
-EXPOSE 8080
-EXPOSE 8081
+EXPOSE 5001
 
 
 # This stage is used to build the service project
@@ -13,6 +12,10 @@ FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["Reseller.API/Reseller.API.csproj", "Reseller.API/"]
+COPY ["Reseller.Domain/Reseller.Domain.csproj", "Reseller.Domain/"]
+COPY ["Reseller.Application/Reseller.Application.csproj", "Reseller.Application/"]
+COPY ["Reseller.Infrastructure/Reseller.Infrastructure.csproj", "Reseller.Infrastructure/"]
+COPY ["Shared/Shared.csproj", "Shared/"]
 RUN dotnet restore "./Reseller.API/Reseller.API.csproj"
 COPY . .
 WORKDIR "/src/Reseller.API"

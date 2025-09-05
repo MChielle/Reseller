@@ -92,7 +92,12 @@ namespace OrderService.Features
 
                 if (revenda == null)
                 {
-                    return Result.Failure<PedidoResponse>(new Error("CriarPedido.Revenda", "Revenda não encontrada."));
+                    return Result.Failure<PedidoResponse>(new Error("CriarPedido.Failure", "Revenda não encontrada."));
+                }
+
+                if(!revenda.IsSuccess)
+                {
+                    return Result.Failure<PedidoResponse>(new Error("CriarPedido.Failure", "Erro ao buscar revenda."));
                 }
 
                 var itens = request.Itens.Select(item => new Item
